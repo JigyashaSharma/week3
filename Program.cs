@@ -75,7 +75,7 @@ var customer = context.Customers.Include(s => s.Sales)
     .FirstOrDefault(c => c.Id == response);
 
 
-var total = customer.Sales.Select(s => s.Product.Price).Sum();
+var total = customer?.Sales.Select(s => s.Product.Price).Sum();
 
 
 var customerSales = context.CustomerSales.ToList();
@@ -101,6 +101,65 @@ var customerSales = context.CustomerSales.ToList();
 //}
 
 
+/*********************************************Task 1********************************************************/
+//Task 1 Using the linq queries retrieve a list of all customers from the database who don't have sales
+//Trying to learn different ways
+
+//a. using Method Syntax
+Console.WriteLine("\nCustomers with No Sale Using Method Syntax");
+var custNoSale = context.Customers
+    .Where(c => c.Sales.Count == 0)
+    .Select(c => new CustomerDto(c))
+    .ToList();
+if (custNoSale.Count != 0)
+{
+    foreach (var cust in custNoSale)
+    {
+        Console.WriteLine(cust.CustomerName);
+    }
+}
+else
+{
+    Console.WriteLine("All the customers have Sale!!!");
+}
+
+
+//b. Using Query Syntax
+Console.WriteLine("\nCustomers with No Sale Using Query Syntax");
+var custNoSale2 = from c in context.Customers
+                  where c.Sales.Count == 0
+                  select new CustomerDto(c);
+if (custNoSale2.Count() != 0)
+{
+    foreach (var cust in custNoSale2)
+    {
+        Console.WriteLine(cust.CustomerName);
+    }
+}
+else
+{
+    Console.WriteLine("All the customers have Sale!!!");
+}
+
+Console.WriteLine("\nCustomers with No Sale Using Query Syntax 2");
+custNoSale2 = from c in context.Customers
+              join s in context.Sales on c.Id equals s.CustomerId into CustomerSaleGroup
+              from cs1 in CustomerSaleGroup.DefaultIfEmpty()
+              where cs1.Customer == null
+              select new CustomerDto(c);
+
+if (custNoSale2.Count() != 0)
+{
+    foreach (var cust in custNoSale2)
+    {
+        Console.WriteLine(cust.CustomerName);
+    }
+}
+else
+{
+    Console.WriteLine("All the customers have Sale!!!");
+}
+/*************************************************Task 1 Ends****************************************************/
 
 Console.ReadLine();
 
