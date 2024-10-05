@@ -228,6 +228,31 @@ Console.WriteLine($"Store \"{store.Name}\" Added.");
 
 /*************************************************Task 3 Ends ********************************************************/
 
+/*************************************************Task 4 ********************************************************/
+//Task4: Find the list of all stores that have sales
+
+Console.WriteLine("\n\n*************Task4*************\n");
+var storeDto = context.Stores
+    .Where(s => s.Sales.Count() > 0)
+    .Select(s => new StoreDto
+    {
+        Info = s.Name + ", " + s.Location
+    });
+
+if (storeDto.Count() != 0)
+{
+    Console.WriteLine("List of Stores with Sales\n");
+    foreach (var sd in storeDto)
+    {
+        Console.WriteLine(sd.Info);
+    }
+}
+else
+{
+    Console.WriteLine("No stores has done Sale.");
+}
+
+/*************************************************Task 4 Ends ********************************************************/
 Console.ReadLine();
 
 
