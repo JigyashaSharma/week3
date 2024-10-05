@@ -1,5 +1,6 @@
 ﻿using EntityModels.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using Week3EntityFramework.Dtos;
 
 var context = new IndustryConnectWeek2Context();
@@ -106,6 +107,7 @@ var customerSales = context.CustomerSales.ToList();
 //Trying to learn different ways
 
 //a. using Method Syntax
+Console.WriteLine("\n\n*************Task1*************\n");
 Console.WriteLine("\nCustomers with No Sale Using Method Syntax");
 var custNoSale = context.Customers
     .Where(c => c.Sales.Count == 0)
@@ -160,6 +162,51 @@ else
     Console.WriteLine("All the customers have Sale!!!");
 }
 /*************************************************Task 1 Ends****************************************************/
+
+/*************************************************Task 2 ********************************************************/
+//Task2: Insert a new customer with a sale record
+
+Console.WriteLine("\n\n*************Task2*************\n");
+Console.WriteLine("Enter the Customer Details");
+Console.WriteLine("FirstName?");
+var fName = Console.ReadLine();
+Console.WriteLine("LastName?");
+var lName = Console.ReadLine();
+
+bool flag = true;
+//Run the loop till DOB is not in correct format
+while (flag)
+{
+    Console.WriteLine("Valid Date of Birth in yyyy-mm-dd format?");
+    var inDate = Console.ReadLine();
+
+    CultureInfo cinfo = CultureInfo.InvariantCulture;
+    string dateFormat = "yyyy-MM-dd";
+
+    //Checks for date validity
+    if (DateTime.TryParseExact(inDate, dateFormat, cinfo, DateTimeStyles.None, out DateTime dob)
+        && ((dob.Year < DateTime.Today.Year ||( dob.Year == DateTime.Today.Year && dob.Month <= DateTime.Today.Month && dob.Day <= DateTime.Today.Day)))
+        && (dob.Month >= 1 || dob.Month <= 12)
+        && (dob.Day > 0 || dob.Day < DateTime.DaysInMonth(dob.Year,dob.Month)))
+    {
+        customer = new Customer { FirstName = fName, LastName = lName, DateOfBirth = dob };
+        context.Customers.Add(customer);
+        context.SaveChanges();
+
+        var sale = new Sale { CustomerId = customer.Id, ProductId = 2, StoreId = 2, DateSold = DateTime.Now };
+        context.Sales.Add(sale);
+        context.SaveChanges();
+
+        Console.WriteLine($"Customer \"{customer.FirstName} {customer.LastName}\" and Sale added.");
+        flag = false;
+    }
+    else
+    {
+        Console.WriteLine("Dob was not proper: Check the format yyyy-mm-dd or date should be before today's date.");
+    }
+}
+
+/*************************************************Task 2 Ends ********************************************************/
 
 Console.ReadLine();
 
