@@ -1,5 +1,6 @@
 ﻿using EntityModels.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Globalization;
 using Week3EntityFramework.Dtos;
 
@@ -207,6 +208,25 @@ while (flag)
 }
 
 /*************************************************Task 2 Ends ********************************************************/
+
+/*************************************************Task 3 ********************************************************/
+//Task3: Add a new store
+
+Console.WriteLine("\n\n*************Task3*************\n");
+
+Console.WriteLine("Enter the Store Details");
+Console.WriteLine("Store Name?");
+var sName = Console.ReadLine();
+Console.WriteLine("Store Location?");
+var sLocation = Console.ReadLine();
+
+var store = new Store { Name = sName, Location = sLocation };
+context.Stores.Add(store);
+context.SaveChanges();
+
+Console.WriteLine($"Store \"{store.Name}\" Added.");
+
+/*************************************************Task 3 Ends ********************************************************/
 
 Console.ReadLine();
 
