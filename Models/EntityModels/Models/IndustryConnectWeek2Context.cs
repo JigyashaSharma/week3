@@ -49,12 +49,12 @@ public partial class IndustryConnectWeek2Context : DbContext
             entity.Property(e => e.CustomerId).HasColumnName("Customer Id");
             entity.Property(e => e.DateSold).HasColumnType("datetime");
             entity.Property(e => e.FirstName).HasMaxLength(30);
+            entity.Property(e => e.FullName)
+                .HasMaxLength(71)
+                .HasColumnName("Full Name");
             entity.Property(e => e.LastName).HasMaxLength(40);
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Price).HasColumnType("money");
-            entity.Property(e => e.TotalPurchases)
-                .HasColumnType("money")
-                .HasColumnName("Total Purchases");
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -88,6 +88,7 @@ public partial class IndustryConnectWeek2Context : DbContext
         {
             entity.ToTable("Store");
 
+            entity.Property(e => e.Location).HasMaxLength(100);
             entity.Property(e => e.Name).HasMaxLength(100);
         });
 
